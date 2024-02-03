@@ -2,7 +2,7 @@ const express = require('express');
 const mysql = require('mysql2');
 const app = express();
 
-
+//My SQL Connection setup
 const connection = mysql.createConnection({
     host: 'localhost',
       user: 'root',
@@ -18,7 +18,15 @@ const connection = mysql.createConnection({
   
     console.log('Connected to the database');
   
-    // Perform database operations here
+    // Import routes
+  const authRoutes = require('./routes/auth');
+  const clientsRoutes = require('./routes/clients');
+  const casesRoutes = require('./routes/cases');
+
+  // Use routes
+  app.use('/api/auth', authRoutes);
+  app.use('/api/clients', clientsRoutes);
+  app.use('/api/cases', casesRoutes);
   
     // Example query: select all rows from a table
     connection.query('SELECT * FROM clients', (queryErr, results) => {
@@ -28,6 +36,11 @@ const connection = mysql.createConnection({
       }
   
       console.log('Query results:', results);
+
+      //Start the server
+      app.listen(1005, () => {
+      console.log("Server running on the port 1005")
+         });
   
       // Close the database connection
       connection.end(err => {
@@ -40,6 +53,4 @@ const connection = mysql.createConnection({
     });
   });
 
-app.listen(1005, () => {
-    console.log("Server running on the port 1005")
-});
+  
